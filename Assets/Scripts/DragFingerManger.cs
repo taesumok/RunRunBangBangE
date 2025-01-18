@@ -1,18 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class DragFingerManger : MonoBehaviour
 {
+
     private SpriteRenderer spriteRenderer;
 
+  
+
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();   
+        spriteRenderer = GetComponent<SpriteRenderer>();  
+        transform.position = new Vector3(0, transform.position.y, 0); 
+        Color color = spriteRenderer.color;
+        color.a = 1.0f;
+        spriteRenderer.color = color;
+
         
         StartCoroutine(Disappear());
+        
     }
 
     // Update is called once per frame
@@ -22,9 +32,9 @@ public class DragFingerManger : MonoBehaviour
         float move_x = -0.5f;
         Color color = spriteRenderer.color;
         //Debug.Log("color.a : " + color.a);
-        while (color.a <= 1) // ¹«ÇÑ ¹Ýº¹À¸·Î ÅÍÄ¡ ÅØ½ºÆ® ±ôºýÀÓ 
+        while (color.a > 0) // ï¿½ï¿½ï¿½ï¿½ ï¿½Ýºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
         {
-            if (transform.position.x <= -1.0f || transform.position.x >= 1.0f)
+            if (transform.position.x < -1.0f || transform.position.x > 1.0f)
             {
                 move_x *= -1;
             }
@@ -33,15 +43,16 @@ public class DragFingerManger : MonoBehaviour
             
             
             //Debug.Log("color.a : " + color.a);
-            color.a -= 0.1f;
+            color.a -= 0.05f;
             spriteRenderer.color = color;
             yield return new WaitForSeconds(0.1f);
 
         }
+        gameObject.SetActive(false);
 
        
        
-        gameObject.SetActive(false);
+        
 
     }
 }

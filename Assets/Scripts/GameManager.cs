@@ -6,8 +6,10 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class GameManager : MonoBehaviour
 {
+    
 
     // public 
     public static GameManager instance;
@@ -28,6 +30,8 @@ public class GameManager : MonoBehaviour
     public GameObject NowGage;
     public GameObject FullGage;
     public GameObject LifeHeart;
+
+    public GameObject finger;
    
 
 
@@ -55,6 +59,8 @@ public class GameManager : MonoBehaviour
     public string guid;
 
 
+
+
     // Start is called before the first frame update
 
     void Awake()
@@ -64,7 +70,7 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
         else{
-            Debug.Log("¾À µÎ°³ ÀÌ»óÀÇ instance °¡ Á¸ÀçÇÕ´Ï´Ù");
+            Debug.Log("?? ??? ????? instance ?? ????????");
             Destroy(gameObject);
         }
     }
@@ -85,11 +91,12 @@ public class GameManager : MonoBehaviour
         rate_y = (float)Screen.height / ScreenY;
         Debug.Log("rate_y : " + rate_x + " rate_y : " + rate_y);
 
+        
         SkyRender = Sky.GetComponent<SpriteRenderer>();
         Debug.Log("baseRender.bounds.size.y : " + SkyRender.bounds.size.y + " Screen.height : " + Screen.height);
         //  Instantiate(playerPrefab);
        
-        v_addGage = v_fullGage * 0.001f;
+        v_addGage = v_fullGage * 0.002f;
         NowGage.transform.localScale = new Vector3(0, NowGage.transform.localScale.y, 0);
     }
 
@@ -104,6 +111,7 @@ public class GameManager : MonoBehaviour
             InGame.SetActive(true);
             pauseButton.SetActive(true);
             scoreText.gameObject.SetActive(true);
+            
 
 
             GameObject player = Instantiate(playerPrefab, new Vector3(0, -3.95f * rate_y, 0), Quaternion.identity);
@@ -117,7 +125,8 @@ public class GameManager : MonoBehaviour
             LevelUP();
         }
 
-        scoreText.text = "Score : " + score;
+        //scoreText.text = "Score : " + score;
+        scoreText.text = score.ToString();
 
         //Debug.Log("TIme : " + Time.realtimeSinceStartup);
 
@@ -142,7 +151,8 @@ public class GameManager : MonoBehaviour
             LevelUP();
         }
 
-        scoreText.text = "Score : " + score;
+        //scoreText.text = "Score : " + score;
+        scoreText.text = score.ToString();
 #endif
     }
     public void AddScore()
@@ -169,6 +179,7 @@ public class GameManager : MonoBehaviour
        
         isGameOver = true; 
        // gameOverUI.SetActive(true);
+        pauseButton.SetActive(false);
         menu.SetActive(false);
         ShowRanking();
         //RegisterRanking();
@@ -183,12 +194,13 @@ public class GameManager : MonoBehaviour
         OutputRanking.SetActive(false);
 
 
-        // level ÃÊ±âÈ­
+        // level ????
         
         level = 1;
         addScore = 1;
         score = 0;
         DropSpawner.instance.spawnRate = 3.0f;
+       
         isGameOver = false;
         
         isFullGage = false;
@@ -196,6 +208,7 @@ public class GameManager : MonoBehaviour
         LifeHeart.SetActive(false);
         FullGage.SetActive(false);
         NowGage.SetActive(true);
+        finger.SetActive(true);
 
         GameObject player = Instantiate(playerPrefab, new Vector3(0, -3.95f * rate_y, 0), Quaternion.identity);
         player.transform.localScale = new Vector3(player.transform.localScale.x * rate_x, player.transform.localScale.y * rate_y, 1);
@@ -206,13 +219,13 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         menu.SetActive(true);
-        Time.timeScale = 0f;  // ½Ã°£ ¸ØÃã
+        Time.timeScale = 0f;  // ?ï¿½ï¿½? ????
 
     }
     public void ResumeGame()
     {
         menu.SetActive(false);
-        Time.timeScale = 1f;  // ½Ã°£ ´Ù½Ã Èå¸§
+        Time.timeScale = 1f;  // ?ï¿½ï¿½? ??? ??
 
     }
 
@@ -298,34 +311,34 @@ public class GameManager : MonoBehaviour
 
     IEnumerator GetNameByGuid()
     {
-        string url = "https://secure-taiga-65237-2563e7cea054.herokuapp.com/api/get-name";  // name¸¦ selectÇÒ url
+        string url = "https://secure-taiga-65237-2563e7cea054.herokuapp.com/api/get-name";  // name?? select?? url
         string guid = GameManager.instance.guid;
        
 
-        // ¼­¹ö¿¡ Àü¼ÛÇÒ JSON µ¥ÀÌÅÍ »ý¼º
+        // ?????? ?????? JSON ?????? ????
         RankEntry entry = new RankEntry(guid);
         string jsonData = JsonUtility.ToJson(entry);
 
-        // POST ¿äÃ» »ý¼º
+        // POST ??? ????
         UnityWebRequest request = new UnityWebRequest(url, "POST");
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
 
-        // ¼­¹ö¿¡ ¿äÃ» Àü¼Û
+        // ?????? ??? ????
         yield return request.SendWebRequest();
 
-        // ¼­¹ö ÀÀ´ä Ã³¸®
+        // ???? ???? ???
         if (request.result == UnityWebRequest.Result.Success)
         {
             if (request.downloadHandler.text.Length > 0)
             {
-                Debug.Log("get Name ¼º°ø! Name : " + request.downloadHandler.text);
+                Debug.Log("get Name ????! Name : " + request.downloadHandler.text);
             }
             else
             {
-                Debug.Log("get Name ½ÇÆÐ!");
+                Debug.Log("get Name ????!");
                 RegisterRanking();
             }
 
@@ -333,7 +346,7 @@ public class GameManager : MonoBehaviour
         else
         {
             connectErrorPanel.SetActive(true);
-            //Debug.LogError("·©Å· µî·Ï ½ÇÆÐ: " + request.error);
+            //Debug.LogError("??? ??? ????: " + request.error);ï¿½ï¿½
         }
         request.Dispose();
 
@@ -341,10 +354,10 @@ public class GameManager : MonoBehaviour
 
     List<RankEntry> ParseJson(string json)
     {
-        // JSON µ¥ÀÌÅÍ¸¦ ÆÄ½ÌÇÏ¿© RankEntry ¹è¿­·Î º¯È¯
+        // JSON ??????? ?????? RankEntry ?ï¿½ï¿½?? ???
 
         RankEntry[] entries = JsonHelper.FromJson<RankEntry>(json);
-        return new List<RankEntry>(entries);  // ¹è¿­À» ¸®½ºÆ®·Î º¯È¯ÇÏ¿© ¹ÝÈ¯
+        return new List<RankEntry>(entries);  // ?ï¿½ï¿½?? ??????? ?????? ???
     }
 
 
