@@ -159,7 +159,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.tsmok.RunRunBangBangE
-    Standalone: com.DefaultCompany.2DProject
+    Standalone: com.tsmok.RunRunBangBangE
     iPhone: com.tsmok.RunRunBangBangE
   buildNumber:
     Standalone: 0
@@ -781,6 +781,7 @@ PlayerSettings:
     Android: 0
   il2cppCompilerConfiguration: {}
   managedStrippingLevel:
+    Android: 0
     EmbeddedLinux: 1
     GameCoreScarlett: 1
     GameCoreXboxOne: 1

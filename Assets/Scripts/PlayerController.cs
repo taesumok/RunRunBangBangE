@@ -5,26 +5,26 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // ÇÃ·¹ÀÌ¾î ÀÌµ¿ ¼Óµµ¸¦ ¼³Á¤ÇÏ´Â º¯¼ö
+    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ìµï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
     public float moveSpeed;
     
 
-    // Rigidbody2DÀÇ ¸¶Âû·ÂÀ» ¼³Á¤ÇÏ´Â º¯¼ö
+    // Rigidbody2Dï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
     //public float drag = 0f;
 
-    // Rigidbody2D ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒ º¯¼ö
+    // Rigidbody2D ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private Rigidbody2D rb;
 
-    // Animator ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒ º¯¼ö
+    // Animator ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private Animator animator;
 
-    // ÅÍÄ¡ À§Ä¡¿Í ÇÃ·¹ÀÌ¾î À§Ä¡ÀÇ Â÷ÀÌ¸¦ ÀúÀåÇÏ´Â º¯¼ö
+    // ï¿½ï¿½Ä¡ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
     private Vector2 touchOffset;
 
-    // ÇÃ·¹ÀÌ¾î°¡ µå·¡±× ÁßÀÎÁö ¿©ºÎ¸¦ ÀúÀåÇÏ´Â º¯¼ö
+    // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½å·¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
     private bool isDragging = false;
 
-    // ÇÃ·¹ÀÌ¾î ¹æÇâ ÀüÈ¯ ½Ã ¹ÝÀüÀ» À§ÇØ 
+    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
     private SpriteRenderer spriteRenderer;
 
 
@@ -40,13 +40,13 @@ public class PlayerController : MonoBehaviour
         rate_x = (float)Screen.width / ScreenX;
         rate_y = (float)Screen.height / ScreenY;
 
-        // Rigidbody2D ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿Í¼­ º¯¼ö¿¡ ÀúÀå
+        // Rigidbody2D ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        // Rigidbody2DÀÇ ¸¶Âû·ÂÀ» ¼³Á¤
+        // Rigidbody2Dï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //rb.drag = drag;
        
-        // Animator ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿Í¼­ º¯¼ö¿¡ ÀúÀå
+        // Animator ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         animator = GetComponent<Animator>();
 
     }
@@ -54,11 +54,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // ÅÍÄ¡ ÀÔ·ÂÀ» Ã³¸®ÇÏ´Â ÇÔ¼ö È£Ãâ
+        // ï¿½ï¿½Ä¡ ï¿½Ô·ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½ È£ï¿½ï¿½
         if(Time.timeScale != 0f)
             HandleMouseOrTouch();
 
-        // ÇÃ·¹ÀÌ¾îÀÇ ¼Óµµ¿¡ µû¶ó ¾Ö´Ï¸ÞÀÌ¼Ç »óÅÂ¸¦ º¯°æ
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½
         //animator.SetBool("isMoving", rb.velocity.magnitude > 0.1f);
 
 
@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
     void HandleMouseOrTouch()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
-        // ¸¶¿ì½º ÀÔ·Â Ã³¸®
+        // ï¿½ï¿½ï¿½ì½º ï¿½Ô·ï¿½ Ã³ï¿½ï¿½
         if (Input.GetMouseButtonDown(0))
         {
 
@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
             // float screenHalfWidth = Camera.main.orthographicSize * Camera.main.aspect;
             // newPos.x = Mathf.Clamp(newPos.x, -screenHalfWidth, screenHalfWidth);
 
-            rb.velocity = (newPos - rb.position) * (moveSpeed* rate_x);
+            rb.velocity = (newPos - rb.position) * (moveSpeed * rate_x);
             //rb.AddForce((newPos - rb.position) * (moveSpeed * rate_x),ForceMode2D.Force);
 
 

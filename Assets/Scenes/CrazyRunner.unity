@@ -953,7 +953,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 116f5946c869de149b064ad08c6b7e42, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1604,6 +1604,7 @@ MonoBehaviour:
   NowGage: {fileID: 736983227}
   FullGage: {fileID: 745240266}
   LifeHeart: {fileID: 9398990}
+  finger: {fileID: 1473698142}
   playerPrefab: {fileID: 5248489661243782233, guid: efacba8856152a54bab397bedd6c3493, type: 3}
   score: 0
   ScreenX: 1080
@@ -3299,7 +3300,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300242, guid: 7a90fcdada22c9b429479d5933a03692, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4177,6 +4178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1962922482}
   - component: {fileID: 1962922481}
+  - component: {fileID: 1962922483}
   m_Layer: 0
   m_Name: Sky
   m_TagString: Untagged
@@ -4244,13 +4246,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1962922480}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0192, y: 1.0065, z: 0}
+  m_LocalPosition: {x: 0.0192, y: 5.81, z: 0}
   m_LocalScale: {x: 0.8830575, y: 0.825956, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 996476758}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1962922483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962922480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 846af97cb46f2491f94afb91227f5685, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2058885832
 GameObject:
   m_ObjectHideFlags: 0
