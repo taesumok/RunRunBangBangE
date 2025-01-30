@@ -8,6 +8,7 @@ public class DragFingerManger : MonoBehaviour
 {
 
     private SpriteRenderer spriteRenderer;
+  
 
   
 

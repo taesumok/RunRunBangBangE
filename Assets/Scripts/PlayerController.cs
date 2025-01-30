@@ -27,7 +27,8 @@ public class PlayerController : MonoBehaviour
     // �÷��̾� ���� ��ȯ �� ������ ���� 
     private SpriteRenderer spriteRenderer;
 
-
+    private AudioSource audioSource;
+    public AudioClip heart_cilp;
     private float rate_x;
     private float rate_y;
     public float ScreenX;
@@ -48,6 +49,8 @@ public class PlayerController : MonoBehaviour
        
         // Animator ������Ʈ�� �����ͼ� ������ ����
         animator = GetComponent<Animator>();
+
+        audioSource = GetComponent<AudioSource>();
 
     }
 
@@ -160,6 +163,8 @@ public class PlayerController : MonoBehaviour
                 GameManager.instance.destroyAllDrops();
 
                 GameManager.instance.isFullGage = false;
+
+                audioSource.PlayOneShot(heart_cilp);
 
                 StartCoroutine(Blink());
                 

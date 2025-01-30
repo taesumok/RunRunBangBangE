@@ -58,6 +58,20 @@ public class GameManager : MonoBehaviour
     public bool isFullGage = false;
     public string guid;
 
+    AudioSource audioSource;
+    public AudioClip bgm_clip;
+    public AudioClip die_cilp;
+    public AudioClip getLife_cilp;
+
+    bool audioOn = true;
+
+
+    public Text auidioText;
+
+    
+
+    
+
 
 
 
@@ -82,7 +96,7 @@ public class GameManager : MonoBehaviour
         guid = GetOrCreateDeviceID();
         StartCoroutine(GetNameByGuid());
         //GetOrCreateDeviceID();
-        intro.SetActive(true);
+        //intro.SetActive(true); => GetNameByGuid 내로 이동
         InGame.SetActive(false);
         LifeHeart.SetActive(false);
         FullGage.SetActive(false);
@@ -92,12 +106,17 @@ public class GameManager : MonoBehaviour
         Debug.Log("rate_y : " + rate_x + " rate_y : " + rate_y);
 
         
-        SkyRender = Sky.GetComponent<SpriteRenderer>();
-        Debug.Log("baseRender.bounds.size.y : " + SkyRender.bounds.size.y + " Screen.height : " + Screen.height);
+        //SkyRender = Sky.GetComponent<SpriteRenderer>();
+        //Debug.Log("baseRender.bounds.size.y : " + SkyRender.bounds.size.y + " Screen.height : " + Screen.height);
         //  Instantiate(playerPrefab);
        
         v_addGage = v_fullGage * 0.002f;
+        
         NowGage.transform.localScale = new Vector3(0, NowGage.transform.localScale.y, 0);
+
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = bgm_clip;
+        
     }
 
 
@@ -107,6 +126,9 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
         if (!InputRanking.activeSelf && Input.GetMouseButtonDown(0) && !isStart)
         {
+            if(audioOn == true){
+                audioSource.Play();
+            }
             intro.SetActive(false);
             InGame.SetActive(true);
             pauseButton.SetActive(true);
@@ -134,6 +156,9 @@ public class GameManager : MonoBehaviour
 #elif UNITY_ANDROID || UNITY_IOS
         if (!InputRanking.activeSelf && !isStart && Input.touchCount > 0)
         {
+            if(audioOn == true){
+                audioSource.Play();
+            }
             intro.SetActive(false);
             InGame.SetActive(true);
             pauseButton.SetActive(true);
@@ -155,6 +180,22 @@ public class GameManager : MonoBehaviour
         scoreText.text = score.ToString();
 #endif
     }
+    public void SoundOnOFF()
+    {
+        if(audioOn == true){
+            audioSource.Stop();
+            auidioText.text = "Sound OFF";
+            auidioText.color = new Color(0.5f,0.5f,0.5f);
+            audioOn = false;
+        }
+        else{
+            audioSource.Play();
+            auidioText.text = "Sound ON";
+            auidioText.color = new Color(0,0,0);
+            audioOn = true;
+        }
+
+    }
     public void AddScore()
     {
         if (!isGameOver)
@@ -166,17 +207,30 @@ public class GameManager : MonoBehaviour
             }
             if(v_fullGage <= NowGage.transform.localScale.x && isFullGage == false)
             {
-                FullGage.SetActive(true);
-                NowGage.SetActive(false);
-                LifeHeart.SetActive(true);
-                isFullGage = true;
+                GetLife();
             }
         }
         
     }
+    public void GetLife()
+    {
+        FullGage.SetActive(true);
+        NowGage.SetActive(false);
+        LifeHeart.SetActive(true);
+        isFullGage = true;
+        if(audioOn == true){
+            audioSource.PlayOneShot(getLife_cilp);
+        }
+    }
     public void GameOver()
     {
-       
+        if(audioOn == true){
+            audioSource.Stop();
+            audioSource.clip = die_cilp;
+            audioSource.loop = false;
+            audioSource.Play();
+        }
+
         isGameOver = true; 
        // gameOverUI.SetActive(true);
         pauseButton.SetActive(false);
@@ -187,7 +241,12 @@ public class GameManager : MonoBehaviour
     }
     public void RestartGame()
     {
-
+        if(audioOn == true){
+            audioSource.Stop();
+            audioSource.clip = bgm_clip;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
 
         destroyAllEntity();
         destroyAllDrops();
@@ -247,7 +306,7 @@ public class GameManager : MonoBehaviour
         
         
         Debug.Log("Level UP!");
-        addScore++;
+        //addScore++;
         DropSpawner.instance.spawnRate -= levelUpRate;
         //DropSpawner.instance.ChangeDrop(level);
 
@@ -341,6 +400,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("get Name ????!");
                 RegisterRanking();
             }
+            intro.SetActive(true);
 
         }
         else

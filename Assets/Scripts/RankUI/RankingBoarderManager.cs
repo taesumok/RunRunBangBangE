@@ -8,8 +8,8 @@ using UnityEngine.UI;
 public class RankingBoarderManager : MonoBehaviour
 {
  
-    public RectTransform contentTransform;  // Scroll ViewÀÇ Content °´Ã¼
-    public GameObject leaderboardItemPrefab;  // ·©Å· Ç×¸ñ¿¡ »ç¿ëÇÒ ÇÁ¸®ÆÕ
+    public RectTransform contentTransform;  // Scroll Viewï¿½ï¿½ Content ï¿½ï¿½Ã¼
+    public GameObject leaderboardItemPrefab;  // ï¿½ï¿½Å· ï¿½×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public GameObject connectErrorPanel;
 
     int rank;
@@ -27,112 +27,152 @@ public class RankingBoarderManager : MonoBehaviour
 
     IEnumerator UpdateScoreAndGetRanking()
     {
-        string url = "https://secure-taiga-65237-2563e7cea054.herokuapp.com/api/update-score";  // score¸¦ updateÇÒ url
+        string url = "https://secure-taiga-65237-2563e7cea054.herokuapp.com/api/update-score";  // scoreï¿½ï¿½ updateï¿½ï¿½ url
         string guid = GameManager.instance.guid;
         int score = GameManager.instance.score;
        
-        // ¼­¹ö¿¡ Àü¼ÛÇÒ JSON µ¥ÀÌÅÍ »ı¼º
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ JSON ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         RankEntry entry = new RankEntry(guid, score);
         string jsonData = JsonUtility.ToJson(entry);
 
-        // POST ¿äÃ» »ı¼º
+        // POST ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½
         UnityWebRequest request = new UnityWebRequest(url, "POST");
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
 
-        // ¼­¹ö¿¡ ¿äÃ» Àü¼Û
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½
         yield return request.SendWebRequest();
 
-        // ¼­¹ö ÀÀ´ä Ã³¸®
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("score Update ¼º°ø!");
+            Debug.Log("score Update ï¿½ï¿½ï¿½ï¿½!");
             StartCoroutine(GetLeaderboard());
             //GameManager.instance.ShowRanking();
         }
         else
         {
             connectErrorPanel.SetActive(true);
-            //Debug.LogError("·©Å· µî·Ï ½ÇÆĞ: " + request.error);
+            //Debug.LogError("ï¿½ï¿½Å· ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + request.error);
         }
         request.Dispose();
 
     }
 
-    // ¼­¹ö¿¡¼­ ·©Å· µ¥ÀÌÅÍ¸¦ °¡Á®¿À´Â ÄÚ·çÆ¾
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾
     IEnumerator GetLeaderboard()
     {
-        string serverUrl = "https://secure-taiga-65237-2563e7cea054.herokuapp.com/api/leaderboard";  // ·©Å· µ¥ÀÌÅÍ¸¦ °¡Á®¿Ã ¼­¹öÀÇ API URL
-        // ¼­¹ö¿¡ GET ¿äÃ»À» º¸³¿
+        string serverUrl = "https://secure-taiga-65237-2563e7cea054.herokuapp.com/api/leaderboard";  // ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ API URL
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GET ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         UnityWebRequest request = UnityWebRequest.Get(serverUrl);
 
-        yield return request.SendWebRequest();  // ¿äÃ»ÀÌ ¿Ï·áµÉ ¶§±îÁö ´ë±â
+        yield return request.SendWebRequest();  // ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
-        // ¿äÃ»ÀÌ ¼º°øÇßÀ» ¶§ Ã³¸®
+        // ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã³ï¿½ï¿½
         if (request.result == UnityWebRequest.Result.Success)
         {
-            // ¼­¹ö¿¡¼­ ¹ŞÀº JSON µ¥ÀÌÅÍ¸¦ ÆÄ½ÌÇÏ¿© RankEntry ¸®½ºÆ®·Î º¯È¯
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ JSON ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ä½ï¿½ï¿½Ï¿ï¿½ RankEntry ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯
             //Debug.Log(request.downloadHandler.text);
             List<RankEntry> rankEntries = ParseJson(request.downloadHandler.text);
 
 
-            // º¯È¯µÈ ¸®½ºÆ®¸¦ ÅëÇØ Scroll View¿¡ ·©Å· Ç×¸ñÀ» µ¿ÀûÀ¸·Î »ı¼º
+            // ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Scroll Viewï¿½ï¿½ ï¿½ï¿½Å· ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             PopulateLeaderboard(rankEntries);
         }
         else
         {
-            // ¿äÃ»ÀÌ ½ÇÆĞÇßÀ» ¶§ ¿¡·¯ ·Î±× Ãâ·Â
+            // ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ ï¿½ï¿½ï¿½
             Debug.LogError("Error fetching leaderboard: " + request.error);
         }
         request.Dispose();
        
     }
 
-    // ¼­¹ö¿¡¼­ ¹ŞÀº JSON µ¥ÀÌÅÍ¸¦ RankEntry ¸®½ºÆ®·Î º¯È¯ÇÏ´Â ÇÔ¼ö
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ JSON ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ RankEntry ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½
     List<RankEntry> ParseJson(string json)
     {
-        // JSON µ¥ÀÌÅÍ¸¦ ÆÄ½ÌÇÏ¿© RankEntry ¹è¿­·Î º¯È¯
+        // JSON ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ä½ï¿½ï¿½Ï¿ï¿½ RankEntry ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½È¯
         
         RankEntry[] entries = JsonHelper.FromJson<RankEntry>(json);
-        return new List<RankEntry>(entries);  // ¹è¿­À» ¸®½ºÆ®·Î º¯È¯ÇÏ¿© ¹İÈ¯
+        return new List<RankEntry>(entries);  // ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï¿ï¿½ ï¿½ï¿½È¯
     }
 
-    // ¹Ş¾Æ¿Â ·©Å· µ¥ÀÌÅÍ¸¦ ±â¹İÀ¸·Î Scroll View¿¡ Ç×¸ñÀ» Ã¤¿ì´Â ÇÔ¼ö
+    // ï¿½Ş¾Æ¿ï¿½ ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Scroll Viewï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ Ã¤ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
     public void PopulateLeaderboard(List<RankEntry> rankEntries)
     {
-        // Content Å©±â¸¦ Ç×¸ñ ¼ö¿¡ ¸Â°Ô Á¶Á¤ (°¢ Ç×¸ñÀÇ ³ôÀÌ´Â 100)
+        // Content Å©ï¿½â¸¦ ï¿½×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ 100)
         // contentTransform.sizeDelta = new Vector2(contentTransform.sizeDelta.x, rankEntries.Count * 100);
 
-        // ÀÌÀü¿¡ »ı¼ºµÈ Ç×¸ñµéÀ» ¸ğµÎ Á¦°Å
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         foreach (Transform child in contentTransform)
         {
             Destroy(child.gameObject);
         }
 
-        // »õ·Î¿î ·©Å· Ç×¸ñµéÀ» »ı¼º
+        // ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½Å· ï¿½×¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         foreach (RankEntry entry in rankEntries)
         {
 
-            // ÇÁ¸®ÆÕÀ» ÀÎ½ºÅÏ½ºÈ­ÇÏ¿© »õ·Î¿î Ç×¸ñÀ» »ı¼ºÇÏ°í Content ¾Æ·¡¿¡ Ãß°¡
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½È­ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ Content ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
             GameObject newItem = Instantiate(leaderboardItemPrefab, contentTransform, false);
 
-            // Prefab ³»ÀÇ ÅØ½ºÆ® UI¸¦ ¾÷µ¥ÀÌÆ®
+            // Prefab ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Æ® UIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 
             Text[] texts = newItem.GetComponentsInChildren<Text>();
             texts[0].text = rank.ToString();
-            texts[1].text = entry.playerName;  // ÇÃ·¹ÀÌ¾î ÀÌ¸§
-            texts[2].text = entry.score.ToString();  // ÇÃ·¹ÀÌ¾î Á¡¼ö
+            texts[1].text = entry.playerName;  // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ì¸ï¿½
+            texts[2].text = entry.score.ToString();  // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             rank++;
+
+            if(GameManager.instance.guid == entry.guid){
+                
+                ScrollToItem(newItem.GetComponent<RectTransform>());
+                texts[0].color = Color.white;
+                texts[2].color = Color.white;
+                texts[1].color = Color.white;
+                //StartCoroutine(Blink(texts));
+                
+            }
+            
+            
         }
+    }
 
-      
+    IEnumerator Blink(Text[] texts)
+    {
+        Color color = texts[1].color;
+        while (true) // ï¿½ï¿½ï¿½ï¿½ ï¿½İºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+        {
+            color.a = 1;
+            texts[0].color = color;
+            texts[2].color = color;
+            texts[1].color = color;
+    
+            yield return new WaitForSeconds(0.6f);
 
+            color.a = 0;
+            texts[0].color = color;
+            texts[2].color = color;
+            texts[1].color = color;
+   
+            yield return new WaitForSeconds(0.6f);
+        }
+    }
+    public void ScrollToItem(RectTransform item)
+    {
+        Canvas.ForceUpdateCanvases(); // ë ˆì´ì•„ì›ƒ ê°•ì œ ì—…ë°ì´íŠ¸
+        RectTransform contentRect = contentTransform.GetComponent<RectTransform>();
+        RectTransform viewRect = contentTransform.parent.GetComponent<RectTransform>();
 
+        // ê°•ì¡° í•­ëª©ì˜ ìœ„ì¹˜ ê³„ì‚°
+        Vector2 viewportPosition = viewRect.anchoredPosition;
+        Vector2 childPosition = item.anchoredPosition;
+        Vector2 newScrollPosition = new Vector2(0, viewportPosition.y + childPosition.y);
 
-
+        contentRect.anchoredPosition = newScrollPosition;
     }
     void OnDisable()
     {
