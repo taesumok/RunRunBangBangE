@@ -1831,6 +1831,7 @@ MonoBehaviour:
   ScreenY: 1920
   isFullGage: 0
   guid: 
+  colorChangeSpeed: 0
   bgm_clip: {fileID: 8300000, guid: 90eae78e8ce85a849b5b0ca11b2de641, type: 3}
   die_cilp: {fileID: 8300000, guid: a0010a1a0c474473b81729eb770c485f, type: 3}
   getLife_cilp: {fileID: 8300000, guid: 2667a0a008b044e218b63df62e2be749, type: 3}

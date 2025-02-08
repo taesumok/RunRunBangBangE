@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class Drop : MonoBehaviour
 {
  
-    // Animator ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒ º¯¼ö
+    // Animator ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private Animator animator;
     private Rigidbody2D  dropRigidBody;
     private BoxCollider2D boxCollider;
+
+    public SpriteRenderer spriteRenderer;
 
     private float rate_x;
     private float rate_y;
@@ -20,15 +23,23 @@ public class Drop : MonoBehaviour
 
     void Start()
     {
-        // Animator ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿Í¼­ º¯¼ö¿¡ ÀúÀå
+        // Animator ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         animator = GetComponent<Animator>();
         dropRigidBody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         rate_x = (float)Screen.width / ScreenX;
         rate_y = (float)Screen.height / ScreenY;
 
         dropRigidBody.gravityScale = dropRigidBody.gravityScale * rate_y;
+
+        if(spriteRenderer.color.g > 0 && spriteRenderer.color.b > 0 ){
+            Color color = spriteRenderer.color;
+            color.g -= GameManager.instance.colorChangeSpeed;
+            color.b -= GameManager.instance.colorChangeSpeed;
+            spriteRenderer.color = color;
+        }
         //Debug.Log("rate_x : " + rate_x + "rate_y : " + rate_y);
 
     }
@@ -39,10 +50,12 @@ public class Drop : MonoBehaviour
         {
       
             GameManager.instance.AddScore();
+
              
             dropRigidBody.velocity = Vector2.zero;
             boxCollider.size = Vector2.zero;
             dropRigidBody.isKinematic = true; 
+            //transform.position = new Vector3(transform.position.x, other.transform.position.y + (1.2f*rate_y), transform.position.z);
             transform.position = new Vector3(transform.position.x, other.transform.position.y + (1.2f*rate_y), transform.position.z);
           
             destroyDrops();
@@ -55,17 +68,17 @@ public class Drop : MonoBehaviour
         dropRigidBody.velocity = Vector2.zero;
         boxCollider.size = Vector2.zero;
         dropRigidBody.isKinematic = true;
-        transform.localScale = new Vector3(0.5f * rate_x, 0.5f * rate_y, 1);
+        transform.localScale = new Vector3(0.5f * rate_x * 1.2f , 0.5f * rate_y * 1.2f, 1);
         animator.SetTrigger("dropCrash");
         StartCoroutine(DestroyAfterAnimation());
     }
 
     IEnumerator DestroyAfterAnimation()
     {
-        // ¾Ö´Ï¸ÞÀÌ¼Ç ±æÀÌ¸¸Å­ ´ë±â
+        // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½Å­ ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
 
-        // ¿ÀºêÁ§Æ® »èÁ¦
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         Destroy(gameObject);
     }
 }
