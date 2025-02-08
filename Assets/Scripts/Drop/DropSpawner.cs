@@ -6,9 +6,11 @@ using UnityEngine;
 public class DropSpawner : MonoBehaviour
 {
     public static DropSpawner instance;
-    // ¶Ë ÇÁ¸®ÆÕÀ» ¼³Á¤ÇÏ´Â º¯¼ö
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     private GameObject orgDropPrefeb;
+
+   
 
     public GameObject dropPrefab_1;
     public GameObject dropPrefab_2;
@@ -20,10 +22,10 @@ public class DropSpawner : MonoBehaviour
     public float ScreenX;
     public float ScreenY;
 
-    // ¶ËÀÌ ½ºÆùµÇ´Â °£°Ý(ÃÊ)À» ¼³Á¤ÇÏ´Â º¯¼ö
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
     public float spawnRate;
 
-    // ½ºÆù Å¸ÀÌ¸Ó¸¦ ÀúÀåÇÏ´Â º¯¼ö
+    // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¸Ó¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
     private float timer;
 
     private void Awake()
@@ -35,7 +37,7 @@ public class DropSpawner : MonoBehaviour
         }
         else
         {
-            Debug.Log("¾À µÎ°³ ÀÌ»óÀÇ instance °¡ Á¸ÀçÇÕ´Ï´Ù(DropSpwner)");
+            Debug.Log("ï¿½ï¿½ ï¿½Î°ï¿½ ï¿½Ì»ï¿½ï¿½ï¿½ instance ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½(DropSpwner)");
             Destroy(instance);
         }
     }
@@ -51,32 +53,33 @@ public class DropSpawner : MonoBehaviour
 
     void Update()
     {
-        // ¸Å ÇÁ·¹ÀÓ¸¶´Ù Å¸ÀÌ¸Ó¿¡ ½Ã°£ Ãß°¡
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ Å¸ï¿½Ì¸Ó¿ï¿½ ï¿½Ã°ï¿½ ï¿½ß°ï¿½
         timer += Time.deltaTime;
 
-        // Å¸ÀÌ¸Ó°¡ ½ºÆù °£°ÝÀ» ÃÊ°úÇßÀ» ¶§
+        // Å¸ï¿½Ì¸Ó°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         if (timer >= spawnRate/10)
         {
-            // ¶ËÀ» ½ºÆùÇÏ´Â ÇÔ¼ö È£Ãâ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½ È£ï¿½ï¿½
             SpawnDrop();
 
-            // Å¸ÀÌ¸Ó¸¦ ÃÊ±âÈ­
+            // Å¸ï¿½Ì¸Ó¸ï¿½ ï¿½Ê±ï¿½È­
             timer = 0;
         }
     }
 
     void SpawnDrop()
     {
-        // ·£´ýÇÑ x À§Ä¡¸¦ »ý¼º (-8¿¡¼­ 8 »çÀÌ)
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (-8ï¿½ï¿½ï¿½ï¿½ 8 ï¿½ï¿½ï¿½ï¿½)
         float xPosition = Random.Range(-3.35f* rate_x, 3.35f* rate_x) ;
 
-        // ½ºÆù À§Ä¡¸¦ ¼³Á¤ (·£´ý x À§Ä¡, ÇöÀç ¿ÀºêÁ§Æ®ÀÇ y À§Ä¡)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½Ä¡, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ y ï¿½ï¿½Ä¡)
         Vector3 spawnPosition = new Vector3(xPosition, transform.position.y, 0);
 
-        // ¶Ë ÇÁ¸®ÆÕÀ» ½ºÆù À§Ä¡¿¡ ÀÎ½ºÅÏ½ºÈ­
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½È­
+        
         GameObject drop = Instantiate(dropPrefab_1, spawnPosition, Quaternion.identity);
         
-        drop.transform.localScale = new Vector3(drop.transform.localScale.x * rate_x, drop.transform.localScale.y * rate_y, 1);
+        drop.transform.localScale = new Vector3(drop.transform.localScale.x * rate_x , drop.transform.localScale.y * rate_y , 1);
         //sDebug.Log("drop.transform.localScale.x : " + drop.transform.localScale.x + " drop.transform.localScale.y : " + drop.transform.localScale.y);
     }
     public void ChangeDrop(int level)

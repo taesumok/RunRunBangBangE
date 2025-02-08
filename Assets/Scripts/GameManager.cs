@@ -58,6 +58,8 @@ public class GameManager : MonoBehaviour
     public bool isFullGage = false;
     public string guid;
 
+    public float colorChangeSpeed = 0f;
+
     AudioSource audioSource;
     public AudioClip bgm_clip;
     public AudioClip die_cilp;
@@ -124,7 +126,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
-        if (!InputRanking.activeSelf && Input.GetMouseButtonDown(0) && !isStart)
+        if (intro.activeSelf && !InputRanking.activeSelf && Input.GetMouseButtonDown(0) && !isStart)
         {
             if(audioOn == true){
                 audioSource.Play();
@@ -154,7 +156,7 @@ public class GameManager : MonoBehaviour
 
 
 #elif UNITY_ANDROID || UNITY_IOS
-        if (!InputRanking.activeSelf && !isStart && Input.touchCount > 0)
+        if (intro.activeSelf && !InputRanking.activeSelf && !isStart && Input.touchCount > 0)
         {
             if(audioOn == true){
                 audioSource.Play();
@@ -201,6 +203,7 @@ public class GameManager : MonoBehaviour
         if (!isGameOver)
         {
             score += addScore;
+            colorChangeSpeed += 0.001f; 
             if (v_fullGage > NowGage.transform.localScale.x)
             {
                 NowGage.transform.localScale = new Vector3(NowGage.transform.localScale.x + v_addGage, NowGage.transform.localScale.y, 0);
@@ -209,6 +212,8 @@ public class GameManager : MonoBehaviour
             {
                 GetLife();
             }
+
+
         }
         
     }
@@ -308,6 +313,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Level UP!");
         //addScore++;
         DropSpawner.instance.spawnRate -= levelUpRate;
+        
         //DropSpawner.instance.ChangeDrop(level);
 
     }
