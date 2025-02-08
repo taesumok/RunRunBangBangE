@@ -203,7 +203,7 @@ public class GameManager : MonoBehaviour
         if (!isGameOver)
         {
             score += addScore;
-            colorChangeSpeed += 0.001f; 
+            //colorChangeSpeed += 0.001f; 
             if (v_fullGage > NowGage.transform.localScale.x)
             {
                 NowGage.transform.localScale = new Vector3(NowGage.transform.localScale.x + v_addGage, NowGage.transform.localScale.y, 0);
