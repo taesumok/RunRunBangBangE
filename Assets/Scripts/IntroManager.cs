@@ -30,9 +30,10 @@ public class IntroManager : MonoBehaviour
 
         
 
-
-        touchText.gameObject.SetActive(true);
+        /*
+        touchText.gameObject.SetActive(false);
         StartCoroutine(BlinkTouchText());
+        */
     }
 
  

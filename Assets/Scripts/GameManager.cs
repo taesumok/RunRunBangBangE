@@ -32,7 +32,16 @@ public class GameManager : MonoBehaviour
     public GameObject LifeHeart;
 
     public GameObject finger;
-   
+
+    public GameObject startButton;
+    public GameObject startButton2;
+
+    public GameObject restartButton;
+    public GameObject restartButton2;
+    public GameObject showRankingButton;
+    public GameObject namePannel;
+    public GameObject rankingCloseButtons;
+
 
 
 
@@ -126,6 +135,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
+/*
         if (intro.activeSelf && !InputRanking.activeSelf && Input.GetMouseButtonDown(0) && !isStart)
         {
             if(audioOn == true){
@@ -142,6 +152,7 @@ public class GameManager : MonoBehaviour
             player.transform.localScale = new Vector3(player.transform.localScale.x * rate_x, player.transform.localScale.y * rate_y, 1);
             isStart = true;
         }
+*/
 
         if (level <= (score / levelUpScore) && level < 10)
         {
@@ -244,6 +255,29 @@ public class GameManager : MonoBehaviour
         //RegisterRanking();
 
     }
+    public void StartGame()
+    {
+        if (intro.activeSelf && !InputRanking.activeSelf)
+        {
+            if (audioOn == true)
+            {
+                audioSource.Play();
+            }
+            intro.SetActive(false);
+            InGame.SetActive(true);
+            pauseButton.SetActive(true);
+            scoreText.gameObject.SetActive(true);
+
+
+
+            GameObject player = Instantiate(playerPrefab, new Vector3(0, -3.95f * rate_y, 0), Quaternion.identity);
+            player.transform.localScale = new Vector3(player.transform.localScale.x * rate_x, player.transform.localScale.y * rate_y, 1);
+            isStart = true;
+        }
+    }
+
+
+
     public void RestartGame()
     {
         if(audioOn == true){
@@ -300,10 +334,46 @@ public class GameManager : MonoBehaviour
         InputRanking.SetActive(true);
 
     }
+    public void RegisterRankingComplete()
+    {
+        intro.SetActive(true);
+        namePannel.SetActive(true);
+        startButton.SetActive(true);
+        startButton2.SetActive(true);
+        showRankingButton.SetActive(true);
+
+    }
 
     public void ShowRanking()
     {
         OutputRanking.SetActive(true);
+        restartButton.SetActive(true);
+        restartButton2.SetActive(true);
+        rankingCloseButtons.SetActive(false);
+    }
+
+    public void ShowRankingIntro()
+    {
+        namePannel.SetActive(false);
+        startButton.SetActive(false);
+        startButton2.SetActive(false);
+        showRankingButton.SetActive(false);
+
+        OutputRanking.SetActive(true);
+
+        restartButton.SetActive(false);
+        restartButton2.SetActive(false);
+        rankingCloseButtons.SetActive(true);
+
+    }
+
+    public void CloseShowRankingIntro()
+    {
+        OutputRanking.SetActive(false);
+        namePannel.SetActive(true);
+        startButton.SetActive(true);
+        startButton2.SetActive(true);
+        showRankingButton.SetActive(true);
     }
 
     public void LevelUP()
@@ -406,7 +476,8 @@ public class GameManager : MonoBehaviour
                 Debug.Log("get Name ????!");
                 RegisterRanking();
             }
-            intro.SetActive(true);
+            
+            RegisterRankingComplete();
 
         }
         else
