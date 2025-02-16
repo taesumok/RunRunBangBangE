@@ -1,2 +1,4 @@
-ios 5779058
-android 5779059
+<EditText
+    android:id="@+id/keyboard_input"
+    android:hint="텍스트를 입력하세요"
+    android:contentDescription="가상 키보드 입력창입니다." />
