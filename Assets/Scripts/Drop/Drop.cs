@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
@@ -13,13 +14,15 @@ public class Drop : MonoBehaviour
     private Rigidbody2D  dropRigidBody;
     private BoxCollider2D boxCollider;
 
-    public SpriteRenderer spriteRenderer;
+    private SpriteRenderer spriteRenderer;
 
     private float rate_x;
     private float rate_y;
 
     public float ScreenX;
     public float ScreenY;
+    public  Text plusScoreText;
+    private bool isAddScore = false;
 
     void Start()
     {
@@ -31,34 +34,19 @@ public class Drop : MonoBehaviour
 
         rate_x = (float)Screen.width / ScreenX;
         rate_y = (float)Screen.height / ScreenY;
-
-        dropRigidBody.gravityScale = dropRigidBody.gravityScale * rate_y;
-
-        if(spriteRenderer.color.g > 0 && spriteRenderer.color.b > 0 ){
-            Color color = spriteRenderer.color;
-            color.g -= GameManager.instance.colorChangeSpeed;
-            color.b -= GameManager.instance.colorChangeSpeed;
-            spriteRenderer.color = color;
-        }
-        //Debug.Log("rate_x : " + rate_x + "rate_y : " + rate_y);
-
     }
   
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Ground"))
         {
-      
             GameManager.instance.AddScore();
 
-             
-            dropRigidBody.velocity = Vector2.zero;
-            boxCollider.size = Vector2.zero;
-            dropRigidBody.isKinematic = true; 
             //transform.position = new Vector3(transform.position.x, other.transform.position.y + (1.2f*rate_y), transform.position.z);
             transform.position = new Vector3(transform.position.x, other.transform.position.y + (1.2f*rate_y), transform.position.z);
-          
+            isAddScore = true;
             destroyDrops();
+            
             //Destroy(gameObject);
         }
         
@@ -70,6 +58,11 @@ public class Drop : MonoBehaviour
         dropRigidBody.isKinematic = true;
         transform.localScale = new Vector3(0.5f * rate_x * 1.2f , 0.5f * rate_y * 1.2f, 1);
         animator.SetTrigger("dropCrash");
+        if(isAddScore == true){
+            plusScoreText.gameObject.SetActive(true);
+            plusScoreText.text = "+" + GameManager.instance.addScore;
+            isAddScore = false;
+        }
         StartCoroutine(DestroyAfterAnimation());
     }
 

@@ -8,6 +8,11 @@ public class DragFingerManger : MonoBehaviour
 {
 
     private SpriteRenderer spriteRenderer;
+
+    private float rate_x;
+    private float rate_y;
+    public float ScreenX;
+    public float ScreenY;
   
 
   
@@ -15,6 +20,8 @@ public class DragFingerManger : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
+        rate_x = (float)Screen.width / ScreenX;
+        rate_y = (float)Screen.height / ScreenY;
         spriteRenderer = GetComponent<SpriteRenderer>();  
         transform.position = new Vector3(0, transform.position.y, 0); 
         Color color = spriteRenderer.color;
@@ -35,7 +42,7 @@ public class DragFingerManger : MonoBehaviour
         //Debug.Log("color.a : " + color.a);
         while (color.a > 0) // ���� �ݺ����� ��ġ �ؽ�Ʈ ������ 
         {
-            if (transform.position.x < -1.0f || transform.position.x > 1.0f)
+            if (transform.position.x < -1.0f*rate_x || transform.position.x > 1.0f*rate_x)
             {
                 move_x *= -1;
             }

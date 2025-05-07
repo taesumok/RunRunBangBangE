@@ -34,6 +34,15 @@ public class PlayerController : MonoBehaviour
     public float ScreenX;
     public float ScreenY;
 
+    bool doMove;
+
+    Vector2 mousePos;
+    Vector2 dragMousePos;
+    Vector2 dragPos;
+
+    
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,6 +75,17 @@ public class PlayerController : MonoBehaviour
 
 
     }
+    void FixedUpdate()
+    {
+        if(doMove){
+            rb.velocity = (dragPos - rb.position) * (moveSpeed);
+            spriteRenderer.flipX = rb.velocity.x < 0f;
+        }
+        else{
+            rb.velocity = Vector2.zero;
+        }
+        
+    }
 
     void HandleMouseOrTouch()
     {
@@ -74,36 +94,39 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
 
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             //RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
             //if (hit.collider != null && hit.collider.gameObject == gameObject)
             //{
             isDragging = true;
-            touchOffset = (Vector2)transform.position - (Vector2)mousePos;
+            touchOffset = new Vector2(transform.position.x - mousePos.x, transform.position.y);
             //}
         }
-        else if (Input.GetMouseButton(0) && isDragging)
+        if (Input.GetMouseButton(0) && isDragging)
         {
             
-             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-             Vector2 newPos = (Vector2)mousePos + touchOffset;
+             dragMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+             dragPos  = new Vector2(dragMousePos.x + touchOffset.x, touchOffset.y);
             // float screenHalfWidth = Camera.main.orthographicSize * Camera.main.aspect;
             // newPos.x = Mathf.Clamp(newPos.x, -screenHalfWidth, screenHalfWidth);
-
-            rb.velocity = (newPos - rb.position) * (moveSpeed * rate_x);
+            //rb.AddForce(newPos - rb.position);
+            doMove = true;
+            //rb.velocity = (newPos - rb.position) * (moveSpeed * rate_x);
+            
             //rb.AddForce((newPos - rb.position) * (moveSpeed * rate_x),ForceMode2D.Force);
 
 
-            spriteRenderer.flipX = rb.velocity.x < 0f;
+            
              animator.SetBool("Run", true);
 
             
         }
-        else if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             isDragging = false;
-            //rb.velocity = Vector2.zero;
-            rb.velocity *= 0.2f;
+            doMove = false;
+           
+            //rb.velocity *= 0.2f;
             animator.SetBool("Run", false);
 
         }
@@ -112,38 +135,36 @@ public class PlayerController : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            Vector2 touchPos;
-
+           
             switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    touchPos = Camera.main.ScreenToWorldPoint(touch.position);
-                    //RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.zero);
+                    mousePos = Camera.main.ScreenToWorldPoint(touch.position);
+                    //RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
                     //if (hit.collider != null && hit.collider.gameObject == gameObject)
                     //{
                     isDragging = true;
-                    touchOffset = (Vector2)transform.position - (Vector2)touchPos;
+                    touchOffset = new Vector2(transform.position.x - mousePos.x, transform.position.y);
+                   
                     //}
                     break;
 
                 case TouchPhase.Moved:
-                      if (isDragging)
-                      {
-                        touchPos = Camera.main.ScreenToWorldPoint(touch.position);
-                        Vector2 newPos = (Vector2)touchPos + touchOffset;
-                        // float screenHalfWidth = Camera.main.orthographicSize * Camera.main.aspect;
-                        //newPos.x = Mathf.Clamp(newPos.x, -screenHalfWidth, screenHalfWidth);
-                        rb.velocity = (newPos - rb.position) * (moveSpeed*rate_x);
-                        spriteRenderer.flipX = rb.velocity.x < 0f;
+                    if (isDragging)
+                    {
+                        dragMousePos = Camera.main.ScreenToWorldPoint(touch.position);
+                        dragPos  = new Vector2(dragMousePos.x + touchOffset.x, touchOffset.y);   
+                        doMove = true;
                         animator.SetBool("Run", true);
-                      }
+                    }
                     break;
 
                 case TouchPhase.Ended:
                 case TouchPhase.Canceled:
                     isDragging = false;
-                    //rb.velocity = Vector2.zero;
-                    rb.velocity *= 0.2f;
+                    doMove = false;
+           
+                    //rb.velocity *= 0.2f;
                     animator.SetBool("Run", false);
                     break;
             }
@@ -161,10 +182,13 @@ public class PlayerController : MonoBehaviour
                 GameManager.instance.FullGage.SetActive(false);
                 GameManager.instance.NowGage.SetActive(true);
                 GameManager.instance.destroyAllDrops();
+                GameManager.instance.destroyAllSpaceship();
+                GameManager.instance.destroyAllItem();
 
                 GameManager.instance.isFullGage = false;
-
-                audioSource.PlayOneShot(heart_cilp);
+                if(GameManager.instance.audioOn == true){
+                    audioSource.PlayOneShot(heart_cilp);
+                }
 
                 StartCoroutine(Blink());
                 
@@ -174,6 +198,12 @@ public class PlayerController : MonoBehaviour
                 Destroy(gameObject);
                 GameManager.instance.GameOver();
             }
+        }
+
+        if (other.CompareTag("Item"))
+        {
+            Debug.Log("Get Item!");
+            GameManager.instance.SetDoubleScore();
         }
         
     }

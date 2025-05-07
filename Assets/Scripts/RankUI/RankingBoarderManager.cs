@@ -12,6 +12,7 @@ public class RankingBoarderManager : MonoBehaviour
     public GameObject leaderboardItemPrefab;  // ��ŷ �׸� ����� ������
     public GameObject connectErrorPanel;
 
+
     int rank;
 
 
@@ -19,6 +20,7 @@ public class RankingBoarderManager : MonoBehaviour
     private void OnEnable()
     {
         rank = 1;
+
 
         StartCoroutine(UpdateScoreAndGetRanking());
        
@@ -129,10 +131,19 @@ public class RankingBoarderManager : MonoBehaviour
 
             if(GameManager.instance.guid == entry.guid){
                 
-                ScrollToItem(newItem.GetComponent<RectTransform>());
+                contentTransform.Translate(0 ,rank*50,0) ;
+                Debug.Log("contentTransform.position : " + contentTransform.position);
+               
+               // sb.value = scrollValue;
+
+            
+                //ScrollToItem(newItem.GetComponent<RectTransform>());
+
+
                 texts[0].color = Color.white;
                 texts[2].color = Color.white;
                 texts[1].color = Color.white;
+                
                 //StartCoroutine(Blink(texts));
                 
             }
@@ -161,19 +172,8 @@ public class RankingBoarderManager : MonoBehaviour
             yield return new WaitForSeconds(0.6f);
         }
     }
-    public void ScrollToItem(RectTransform item)
-    {
-        Canvas.ForceUpdateCanvases(); // 레이아웃 강제 업데이트
-        RectTransform contentRect = contentTransform.GetComponent<RectTransform>();
-        RectTransform viewRect = contentTransform.parent.GetComponent<RectTransform>();
 
-        // 강조 항목의 위치 계산
-        Vector2 viewportPosition = viewRect.anchoredPosition;
-        Vector2 childPosition = item.anchoredPosition;
-        Vector2 newScrollPosition = new Vector2(0, viewportPosition.y + childPosition.y);
-
-        contentRect.anchoredPosition = newScrollPosition;
-    }
+    
     void OnDisable()
     {
         foreach (Transform child in contentTransform)

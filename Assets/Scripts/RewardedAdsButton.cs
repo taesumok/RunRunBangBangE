@@ -21,10 +21,15 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
         // Disable the button until the ad is ready to show:
         _showAdButton.interactable = false;
     }
- 
+  
     // Call this public method when you want to get an ad ready to show.
     public void LoadAd()
     {
+#if UNITY_IOS
+        _adUnitId = _iOSAdUnitId;
+#elif UNITY_ANDROID
+        _adUnitId = _androidAdUnitId;
+#endif
         // IMPORTANT! Only load content AFTER initialization (in this example, initialization is handled in a different script).
         Debug.Log("Loading Ad: " + _adUnitId);
         Advertisement.Load(_adUnitId, this);
@@ -41,6 +46,7 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
             _showAdButton.onClick.AddListener(ShowAd);
             // Enable the button for users to click:
             _showAdButton.interactable = true;
+            
         }
     }
  
@@ -59,9 +65,16 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
         if (adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
             Debug.Log("Unity Ads Rewarded Ad Completed");
-            
-            GameManager.instance.RestartGame();
-            GameManager.instance.GetLife();
+            Debug.Log("_showAdButton.name : " + _showAdButton.name);
+            if(_showAdButton.name == "Continue Button_ads" ){
+                GameManager.instance.RestartGame();
+                GameManager.instance.GetLife();
+            }
+            else{
+                GameManager.instance.StartGame();
+                GameManager.instance.GetLife();
+                
+            }
             // Grant a reward.
             Advertisement.Load(_adUnitId, this);
 
@@ -86,6 +99,7 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
  
     void OnDestroy()
     {
+        Debug.Log("OnDestroyAds!");
         // Clean up the button listeners:
         _showAdButton.onClick.RemoveAllListeners();
     }

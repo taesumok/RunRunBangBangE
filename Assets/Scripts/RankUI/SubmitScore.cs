@@ -7,29 +7,29 @@ using UnityEngine.SceneManagement;
 
 public class SubmitScore : MonoBehaviour
 {
-    public InputField nameInputField;  // ´Ð³×ÀÓÀ» ÀÔ·Â¹Þ´Â Input Field
-    public Button submitButton;  // ·©Å· µî·Ï ¹öÆ°
+    public InputField nameInputField;  // ï¿½Ð³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·Â¹Þ´ï¿½ Input Field
+    public Button submitButton;  // ï¿½ï¿½Å· ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°
     public GameObject connectErrorPanel;
     public GameObject InputRanking;
 
     public  void OnEnable()
     {
        
-        // ¹öÆ° Å¬¸¯ ÀÌº¥Æ® ¼³Á¤
+        // ï¿½ï¿½Æ° Å¬ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         submitButton.onClick.AddListener(OnSubmitButtonClicked);
     }
 
-    // µî·Ï ¹öÆ°À» ´­·¶À» ¶§ ½ÇÇàµÇ´Â ÇÔ¼ö
+    // ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½Ô¼ï¿½
     void OnSubmitButtonClicked()
     {
 
-        string playerName = nameInputField.text;  // ÀÔ·ÂµÈ ´Ð³×ÀÓ °¡Á®¿À±â
+        string playerName = nameInputField.text;  // ï¿½Ô·Âµï¿½ ï¿½Ð³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       
-        // ÇÃ·¹ÀÌ¾î°¡ ´Ð³×ÀÓÀ» ÀÔ·ÂÇß´ÂÁö È®ÀÎ
+        // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ð³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ß´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
        
         if (!string.IsNullOrEmpty(playerName))
         {
-            // ¼­¹ö¿¡ Á¡¼ö¿Í ´Ð³×ÀÓÀ» Àü¼ÛÇÏ´Â ÄÚ·çÆ¾ ½ÇÇà
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½
             Debug.Log("OnSubmitButtonClicked");
             StartCoroutine(SubmitRank(playerName));
             nameInputField.text = "";
@@ -39,37 +39,38 @@ public class SubmitScore : MonoBehaviour
         
     }
 
-    // ¼­¹ö¿¡ ·©Å· µ¥ÀÌÅÍ¸¦ POST ¿äÃ»À¸·Î Àü¼ÛÇÏ´Â ÇÔ¼ö
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ POST ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½
     IEnumerator SubmitRank(string playerName)
     {
         string guid = PlayerPrefs.GetString("guid");
-        string url = "https://secure-taiga-65237-2563e7cea054.herokuapp.com/api/submit-name";  // ¼­¹öÀÇ API ¿£µåÆ÷ÀÎÆ®
+        string url = "https://secure-taiga-65237-2563e7cea054.herokuapp.com/api/submit-name";  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ API ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 
-        // ¼­¹ö¿¡ Àü¼ÛÇÒ JSON µ¥ÀÌÅÍ »ý¼º
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ JSON ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         RankEntry entry = new RankEntry(guid, playerName);
         string jsonData = JsonUtility.ToJson(entry);
 
-        // POST ¿äÃ» »ý¼º
+        // POST ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½
         UnityWebRequest request = new UnityWebRequest(url, "POST");
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
 
-        // ¼­¹ö¿¡ ¿äÃ» Àü¼Û
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½
         yield return request.SendWebRequest();
 
-        // ¼­¹ö ÀÀ´ä Ã³¸®
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
         if (request.result == UnityWebRequest.Result.Success)
         { 
-            Debug.Log("ID µî·Ï ¼º°ø!");
+            Debug.Log("ID ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
             InputRanking.SetActive(false);
+            GameManager.instance.RegisterRankingComplete();
             //GameManager.instance.ShowRanking();
         }
         else
         {
             connectErrorPanel.SetActive(true);
-            //Debug.LogError("·©Å· µî·Ï ½ÇÆÐ: " + request.error);
+            //Debug.LogError("ï¿½ï¿½Å· ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + request.error);
         }
         request.Dispose();
         

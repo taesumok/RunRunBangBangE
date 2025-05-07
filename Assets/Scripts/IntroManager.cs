@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class IntroManager : MonoBehaviour
 {
-    public Text titleText; // "¶Ù¾î¶ó ¹æ¹æÀÌ" ÅØ½ºÆ®
-    public Text touchText; // "È­¸éÀ» ÅÍÄ¡ÇØÁÖ¼¼¿ä" ÅØ½ºÆ®
+    public Text titleText; // "ï¿½Ù¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½" ï¿½Ø½ï¿½Æ®
+    public Text touchText; // "È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½" ï¿½Ø½ï¿½Æ®
  
 
     float titleY;
@@ -17,7 +17,7 @@ public class IntroManager : MonoBehaviour
     public float ScreenX;
     public float ScreenY;
 
-    public bool isReady = false;
+    public bool isReady;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +26,7 @@ public class IntroManager : MonoBehaviour
         rate_x = (float)Screen.width / ScreenX;
         rate_y = (float)Screen.height / ScreenY;
 
-        // Á¢¼Ó ½Ã ID°¡Á®¿À±â or µî·Ï
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ or ï¿½ï¿½ï¿½
 
         
 
@@ -43,7 +43,7 @@ public class IntroManager : MonoBehaviour
         
         Color color = touchText.color;
         isReady = true;
-        while (true) // ¹«ÇÑ ¹Ýº¹À¸·Î ÅÍÄ¡ ÅØ½ºÆ® ±ôºýÀÓ 
+        while (true) // ï¿½ï¿½ï¿½ï¿½ ï¿½Ýºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
         {
             color.a = 1;
             touchText.color = color;

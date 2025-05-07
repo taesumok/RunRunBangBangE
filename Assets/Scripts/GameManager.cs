@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -18,7 +21,6 @@ public class GameManager : MonoBehaviour
     public bool isInputRanking = false;
     public Text scoreText;
     public GameObject InGame;
-    public GameObject gameOverUI;
     public GameObject intro;
     public GameObject menu;
     public GameObject pauseButton;
@@ -41,6 +43,10 @@ public class GameManager : MonoBehaviour
     public GameObject showRankingButton;
     public GameObject namePannel;
     public GameObject rankingCloseButtons;
+    
+    public Text lifeGageText;
+
+    public Text showLevelText; 
 
 
 
@@ -55,26 +61,34 @@ public class GameManager : MonoBehaviour
     public float ScreenY;
 
     private SpriteRenderer SkyRender;
+
+   
     // private
     int level = 1;
-    int addScore = 1;
-    int levelUpScore = 100;
-    float levelUpRate = 0.2f;
-    bool isStart = false;
+    public int addScore = 1;
+    public int levelUpScore;
+
+    public int addLevelUpScore = 200;
+    float levelUpRate = 0.4f;
+
+    public bool checkLevelUP = false;
+    public bool isStart = false;
 
     float v_fullGage = 0.25f;
     float v_addGage = 0f;
     public bool isFullGage = false;
     public string guid;
 
-    public float colorChangeSpeed = 0f;
+    public float colorChangeSpeed;
 
     AudioSource audioSource;
     public AudioClip bgm_clip;
     public AudioClip die_cilp;
     public AudioClip getLife_cilp;
 
-    bool audioOn = true;
+    public bool audioOn = true;
+
+    bool isFirstLevel = true;
 
 
     public Text auidioText;
@@ -90,7 +104,6 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        
         if (instance == null) { 
             instance = this;
         }
@@ -111,6 +124,7 @@ public class GameManager : MonoBehaviour
         InGame.SetActive(false);
         LifeHeart.SetActive(false);
         FullGage.SetActive(false);
+    
         
         rate_x = (float)Screen.width / ScreenX;
         rate_y = (float)Screen.height / ScreenY;
@@ -130,68 +144,43 @@ public class GameManager : MonoBehaviour
         
     }
 
-
     // Update is called once per frame
     void Update()
     {
-#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
-/*
-        if (intro.activeSelf && !InputRanking.activeSelf && Input.GetMouseButtonDown(0) && !isStart)
-        {
-            if(audioOn == true){
-                audioSource.Play();
+
+        if(isStart){
+            if(isFirstLevel){
+                StartCoroutine(WaitForNextLevel());
+                isFirstLevel = false;
             }
-            intro.SetActive(false);
-            InGame.SetActive(true);
-            pauseButton.SetActive(true);
-            scoreText.gameObject.SetActive(true);
-            
+            if (checkLevelUP)
+            {
+                
+                if ( score >= levelUpScore )
+                {
+                    levelUpScore += addLevelUpScore;
+                    addLevelUpScore+=100;
+                    level++;
+                    if(level > 5){
+                        levelUpRate*=0.5f;
+                    }
 
+                    DropTimerInit();
 
-            GameObject player = Instantiate(playerPrefab, new Vector3(0, -3.95f * rate_y, 0), Quaternion.identity);
-            player.transform.localScale = new Vector3(player.transform.localScale.x * rate_x, player.transform.localScale.y * rate_y, 1);
-            isStart = true;
-        }
-*/
+                    DropSpawner.instance.spawnRate -= levelUpRate;
+                    DropSpawner.instance.spaceSpawnRate -= levelUpRate*50;
+                    DropSpawner.instance.spaceSpawnRate -= levelUpRate*60;
 
-        if (level <= (score / levelUpScore) && level < 10)
-        {
-            level = (score / levelUpScore) + 1;
-            LevelUP();
-        }
+                    destroyAllDrops();
+                    destroyAllSpaceship();
+                    destroyAllItem();
+                    StartCoroutine(WaitForNextLevel());
 
-        //scoreText.text = "Score : " + score;
-        scoreText.text = score.ToString();
-
-        //Debug.Log("TIme : " + Time.realtimeSinceStartup);
-
-
-#elif UNITY_ANDROID || UNITY_IOS
-        if (intro.activeSelf && !InputRanking.activeSelf && !isStart && Input.touchCount > 0)
-        {
-            if(audioOn == true){
-                audioSource.Play();
+                }
             }
-            intro.SetActive(false);
-            InGame.SetActive(true);
-            pauseButton.SetActive(true);
-            scoreText.gameObject.SetActive(true);
-
-
-            GameObject player = Instantiate(playerPrefab, new Vector3(0, -3.95f * rate_y, 0), Quaternion.identity);
-            player.transform.localScale = new Vector3(player.transform.localScale.x * rate_x, player.transform.localScale.y * rate_y, 1);
-            isStart = true;
+            //scoreText.text = "Score : " + score;
+            scoreText.text = "Lv" + level + "\n" + score.ToString() + "/" + levelUpScore.ToString();
         }
-
-        if (level <= (score / levelUpScore) && level < 10)
-        {
-            level = (score / levelUpScore) + 1;
-            LevelUP();
-        }
-
-        //scoreText.text = "Score : " + score;
-        scoreText.text = score.ToString();
-#endif
     }
     public void SoundOnOFF()
     {
@@ -213,6 +202,7 @@ public class GameManager : MonoBehaviour
     {
         if (!isGameOver)
         {
+            checkLevelUP = true;
             score += addScore;
             //colorChangeSpeed += 0.001f; 
             if (v_fullGage > NowGage.transform.localScale.x)
@@ -252,6 +242,7 @@ public class GameManager : MonoBehaviour
         pauseButton.SetActive(false);
         menu.SetActive(false);
         ShowRanking();
+        isStart = false;
         //RegisterRanking();
 
     }
@@ -266,7 +257,7 @@ public class GameManager : MonoBehaviour
             intro.SetActive(false);
             InGame.SetActive(true);
             pauseButton.SetActive(true);
-            scoreText.gameObject.SetActive(true);
+            lifeGageText.gameObject.SetActive(true);
 
 
 
@@ -289,6 +280,9 @@ public class GameManager : MonoBehaviour
 
         destroyAllEntity();
         destroyAllDrops();
+        destroyAllSpaceship();
+        destroyAllItem();
+        DropTimerInit();
         OutputRanking.SetActive(false);
 
 
@@ -297,7 +291,13 @@ public class GameManager : MonoBehaviour
         level = 1;
         addScore = 1;
         score = 0;
-        DropSpawner.instance.spawnRate = 3.0f;
+        levelUpScore = 100;
+        addLevelUpScore = 200;
+        DropSpawner.instance.spawnCount = 0;
+        DropSpawner.instance.spawnRate = 3f;
+        DropSpawner.instance.spaceSpawnRate = 150f;
+        DropSpawner.instance.itemSpawnRate = 180f;
+        levelUpRate = 0.4f;
        
         isGameOver = false;
         
@@ -311,6 +311,9 @@ public class GameManager : MonoBehaviour
         GameObject player = Instantiate(playerPrefab, new Vector3(0, -3.95f * rate_y, 0), Quaternion.identity);
         player.transform.localScale = new Vector3(player.transform.localScale.x * rate_x, player.transform.localScale.y * rate_y, 1);
         pauseButton.SetActive(true); 
+        isStart = true;
+        isFirstLevel = true;
+        SkyManager.instance.spriteRenderer.color = Color.white;
         // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
     }
@@ -330,7 +333,11 @@ public class GameManager : MonoBehaviour
     public void  RegisterRanking()
     {
         pauseButton.SetActive(false);
-        gameOverUI.SetActive(false);
+        namePannel.SetActive(false);
+        startButton.SetActive(false);
+        startButton2.SetActive(false);
+        showRankingButton.SetActive(false);
+
         InputRanking.SetActive(true);
 
     }
@@ -376,17 +383,6 @@ public class GameManager : MonoBehaviour
         showRankingButton.SetActive(true);
     }
 
-    public void LevelUP()
-    {
-        
-        
-        Debug.Log("Level UP!");
-        //addScore++;
-        DropSpawner.instance.spawnRate -= levelUpRate;
-        
-        //DropSpawner.instance.ChangeDrop(level);
-
-    }
     public void CloseConnectErrorPanel()
     {
         connectErrorPanel.SetActive(false);
@@ -405,8 +401,18 @@ public class GameManager : MonoBehaviour
             Destroy(entity.gameObject);
         }
     }
+
+    public  void destroyAllSpaceship()
+    {
+        GameObject[] entities = GameObject.FindGameObjectsWithTag("SpaceShip");
+        foreach (GameObject entity in entities)
+        {
+            Destroy(entity.gameObject);
+        }
+    }
     public  void destroyAllDrops()
     {
+        
         //Drop drop;
 
         GameObject[] drops = GameObject.FindGameObjectsWithTag("Drop");
@@ -414,12 +420,22 @@ public class GameManager : MonoBehaviour
 
         foreach (GameObject drop in drops)
         {
+            
             //drop.destroyDrops();
             Drop v_drop = drop.GetComponent<Drop>();
             v_drop.destroyDrops();
             //Destroy(drop.gameObject);
-        }
+        } 
        
+    }
+
+     public  void destroyAllItem()
+    {
+        GameObject[] entities = GameObject.FindGameObjectsWithTag("Item");
+        foreach (GameObject entity in entities)
+        {
+            Destroy(entity.gameObject);
+        }
     }
 
     public string   GetOrCreateDeviceID()
@@ -443,11 +459,25 @@ public class GameManager : MonoBehaviour
             return newGuid;
         }
     }
+    public void SetDoubleScore()
+    {
+        StartCoroutine(C_SetDoubleScore());
+    }
+    IEnumerator C_SetDoubleScore()
+    {
+        addScore *= 2;
+        yield return new WaitForSeconds(5f);
+        if(addScore >= 2){
+            addScore /= 2;
+        }
+        else{
+            addScore = 1;
+        }
+    }
 
     IEnumerator GetNameByGuid()
     {
         string url = "https://secure-taiga-65237-2563e7cea054.herokuapp.com/api/get-name";  // name?? select?? url
-        string guid = GameManager.instance.guid;
        
 
         // ?????? ?????? JSON ?????? ????
@@ -470,15 +500,13 @@ public class GameManager : MonoBehaviour
             if (request.downloadHandler.text.Length > 0)
             {
                 Debug.Log("get Name ????! Name : " + request.downloadHandler.text);
+                RegisterRankingComplete();
             }
             else
             {
                 Debug.Log("get Name ????!");
                 RegisterRanking();
             }
-            
-            RegisterRankingComplete();
-
         }
         else
         {
@@ -497,5 +525,48 @@ public class GameManager : MonoBehaviour
         return new List<RankEntry>(entries);  // ?��?? ??????? ?????? ???
     }
 
+
+
+    IEnumerator WaitForNextLevel(){
+        Debug.Log("WaitForNextLevel()");
+        showLevelText.color = new Color(showLevelText.color.r,showLevelText.color.g,showLevelText.color.b, 1f);
+        showLevelText.gameObject.SetActive(true);
+        scoreText.gameObject.SetActive(false);
+
+        DropSpawner.instance.doSpawn = false;   
+        checkLevelUP = false;
+        yield return StartCoroutine(ShowLevel());
+        //checkLevelUP = true;
+        DropSpawner.instance.doSpawn = true;   
+
+        SkyManager.instance.spriteRenderer.color = new Color(SkyManager.instance.spriteRenderer.color.r, SkyManager.instance.spriteRenderer.color.g-0.05f, SkyManager.instance.spriteRenderer.color.b-0.05f);
+        Debug.Log("WaitForNextLevel() end");
+    }
+    
+    IEnumerator ShowLevel(){
+        showLevelText.text = "LEVEL " + level;
+    
+        Color color = showLevelText.color;
+        //Debug.Log("color.a : " + color.a);
+        while (color.a > 0) // ���� �ݺ����� ��ġ �ؽ�Ʈ ������ 
+        {
+            
+            //Debug.Log("color.a : " + color.a);
+            color.a -= 0.05f;
+            showLevelText.color = color;
+            yield return new WaitForSeconds(0.15f);
+
+        }
+        showLevelText.gameObject.SetActive(false);
+        scoreText.gameObject.SetActive(true);
+    
+    }
+
+    void DropTimerInit()
+    {
+        DropSpawner.instance.timer = 0;
+        DropSpawner.instance.itemTimer = 0;
+        DropSpawner.instance.shipTimer = 0;
+    }
 
 }
