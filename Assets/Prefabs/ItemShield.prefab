@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1943007952752848986}
   m_Layer: 0
   m_Name: ItemShield
-  m_TagString: Item
+  m_TagString: ItemShield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

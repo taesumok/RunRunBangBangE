@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public bool isGameOver = false;
     public bool levelUpFlag = false;
     public bool isInputRanking = false;
+    public bool isShield = false;
     public Text scoreText;
     public GameObject InGame;
     public GameObject intro;
@@ -436,6 +437,12 @@ public class GameManager : MonoBehaviour
         {
             Destroy(entity.gameObject);
         }
+
+        entities = GameObject.FindGameObjectsWithTag("ItemShield");
+        foreach (GameObject entity in entities)
+        {
+            Destroy(entity.gameObject);
+        }
     }
 
     public string   GetOrCreateDeviceID()
@@ -473,6 +480,17 @@ public class GameManager : MonoBehaviour
         else{
             addScore = 1;
         }
+    }
+
+    public void SetShield()
+    {
+        StartCoroutine(C_SetShield());
+    }
+    IEnumerator C_SetShield()
+    {
+        isShield = true;
+        yield return new WaitForSeconds(5f);
+        isShield = false;
     }
 
     IEnumerator GetNameByGuid()

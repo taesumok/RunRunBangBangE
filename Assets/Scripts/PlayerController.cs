@@ -173,7 +173,7 @@ public class PlayerController : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Drop"))
+        if (other.CompareTag("Drop") && GameManager.instance.isShield == false)
         {
             if (GameManager.instance.isFullGage == true)
             {
@@ -199,11 +199,20 @@ public class PlayerController : MonoBehaviour
                 GameManager.instance.GameOver();
             }
         }
+        else if(other.CompareTag("Drop") && GameManager.instance.isShield == true){
+            Destroy(other.gameObject);
+        }
 
         if (other.CompareTag("Item"))
         {
             Debug.Log("Get Item!");
             GameManager.instance.SetDoubleScore();
+        }
+
+        if(other.CompareTag("ItemShield"))
+        {
+            Debug.Log("Get ItemShield!");
+            GameManager.instance.SetShield();
         }
         
     }

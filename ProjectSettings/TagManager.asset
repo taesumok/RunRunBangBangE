@@ -8,6 +8,8 @@ TagManager:
   - Drop
   - Entity
   - SpaceShip
+  - Item
+  - ItemShield
   layers:
   - Default
   - TransparentFX

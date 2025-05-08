@@ -2240,6 +2240,7 @@ MonoBehaviour:
   isGameOver: 0
   levelUpFlag: 0
   isInputRanking: 0
+  isShield: 0
   scoreText: {fileID: 748509271}
   InGame: {fileID: 996476757}
   intro: {fileID: 668293488}
