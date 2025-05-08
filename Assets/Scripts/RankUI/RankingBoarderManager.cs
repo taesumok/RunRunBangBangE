@@ -130,9 +130,10 @@ public class RankingBoarderManager : MonoBehaviour
             rank++;
 
             if(GameManager.instance.guid == entry.guid){
-                
-                contentTransform.Translate(0 ,rank*50,0) ;
-                Debug.Log("contentTransform.position : " + contentTransform.position);
+                int view = rank/15*700;
+                contentTransform.gameObject.transform.position = new Vector3(contentTransform.gameObject.transform.position.x, contentTransform.gameObject.transform.position.y+view, 0);
+                //contentTransform.Translate(0 ,rankViewRate*700f,0);
+                //Debug.Log("ankViewRate*700 : " + rankViewRate*700f);
                
                // sb.value = scrollValue;
 
